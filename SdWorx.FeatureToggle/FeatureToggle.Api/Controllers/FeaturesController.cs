@@ -1,6 +1,8 @@
+using FeatureToggle.Domain.Entities;
+using FeatureToggle.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Toggle.Api.Controllers;
+namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -8,7 +10,7 @@ public class FeaturesController : ControllerBase
 {
     private static readonly string[] _features = new[]
     {
-        "PayEngineApi.EditCollection", 
+        "PayEngineApi.EditCollection",
         "PayrollExporterApi.DeleteExport",
         "PayrollExporterApi.DuplicateExport",
         "PayResultsUi.NewSearchScreen",
@@ -45,8 +47,8 @@ public class FeaturesController : ControllerBase
         return new Feature();
     }
 
-    [HttpPatch]
-    public Feature ToggleActiveState(Guid id, Environment environment, string active)
+    [HttpPatch("{id:Guid}")]
+    public Feature ToggleActiveState(Guid id, [FromQuery] FeatureEnvironment environment, [FromQuery] string active)
     {
         return new Feature();
     }
@@ -72,38 +74,5 @@ public sealed class UpdateFeature
     public string Domain { get; set; } // Api, Frontend, both?
     public string Product { get; set; } // PayEngine, Exporter etc.
     public string Name { get; set; } // Api, Frontend, both?
-    public FeatureState EnvironmentStates { get; set; } // Whether it is turned on. Need to make this an object (for each env).
-}
-
-public sealed class Feature
-{
-    public int DbId { get; set; }
-    public Guid Id { get; set; }
-    public string Domain { get; set; } // Api, Frontend, both?
-    public Product Product { get; set; } // PayEngine, Exporter etc.
-    public string Name { get; set; } // Api, Frontend, both?
-    public FeatureState FeatureState { get; set; } // Whether it is turned on. Need to make this an object (for each env).
-}
-
-public sealed class Product
-{
-    public int DbId { get; set; }
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-}
-
-public sealed class FeatureState
-{
-    public Environment Environment { get; set; }
-    public bool IsActive { get; set; }
-}
-
-public enum Environment
-{
-    Local,
-    Dev,
-    QA,
-    PreProd,
-    NonProd,
-    Prod,
+    public IEnumerable<FeatureState> EnvironmentStates { get; set; } // Whether it is turned on. Need to make this an object (for each env).
 }
