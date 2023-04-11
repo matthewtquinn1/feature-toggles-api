@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Api", "Featur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureToggle.Domain", "FeatureToggle.Domain\FeatureToggle.Domain.csproj", "{0B710E73-55E9-41A1-8A4E-EC016DE8E58C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureToggle.Application", "FeatureToggle.Application\FeatureToggle.Application.csproj", "{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0B710E73-55E9-41A1-8A4E-EC016DE8E58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B710E73-55E9-41A1-8A4E-EC016DE8E58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B710E73-55E9-41A1-8A4E-EC016DE8E58C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

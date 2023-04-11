@@ -1,5 +1,7 @@
+using FeatureToggle.Application.FeatureToggles.Commands;
+using FeatureToggle.Application.FeatureToggles.Queries;
 using FeatureToggle.Domain.Entities;
-using FeatureToggle.Domain.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.Api.Controllers;
@@ -8,13 +10,8 @@ namespace FeatureToggle.Api.Controllers;
 [Route("[controller]")]
 public class FeaturesController : ControllerBase
 {
-    private static readonly string[] _features = new[]
-    {
-        "PayEngineApi.EditCollection",
-        "PayrollExporterApi.DeleteExport",
-        "PayrollExporterApi.DuplicateExport",
-        "PayResultsUi.NewSearchScreen",
-    };
+    private ISender _mediator = null!;
+    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 
     private readonly ILogger<FeaturesController> _logger;
 
@@ -24,55 +21,42 @@ public class FeaturesController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<string> Get()
+    public async Task<List<Feature>> Get()
     {
-        return _features;
+        return await Mediator.Send(new GetFeaturesQuery());
     }
 
     [HttpGet("{id:Guid}")]
-    public string GetById(Guid id)
+    public async Task<Feature> GetById(Guid id)
     {
-        return _features.First();
+        return await Mediator.Send(new GetFeaturesByIdQuery(id));
     }
 
     [HttpPost]
-    public Guid Create(CreateFeature toggle)
+    public async Task<Guid> Create(CreateFeatureCommand command)
     {
-        return Guid.NewGuid();
+        return await Mediator.Send(command);
     }
 
-    [HttpPut]
-    public Feature Update(UpdateFeature toggle)
+    [HttpPut("{id:Guid}")]
+    public async Task<Feature> Update(Guid id, UpdateFeatureCommand command)
     {
-        return new Feature();
+        // TODO: Throw exception when id != command.Id.
+
+        return await Mediator.Send(command);
     }
 
     [HttpPatch("{id:Guid}")]
-    public Feature ToggleActiveState(Guid id, [FromQuery] FeatureEnvironment environment, [FromQuery] string active)
+    public async Task<Feature> ToggleActiveState(Guid id, ToggleFeatureStatusCommand command)
     {
-        return new Feature();
+        // TODO: Throw exception when id != command.Id.
+
+        return await Mediator.Send(command);
     }
 
     [HttpDelete("{id:Guid}")]
-    public void Delete(Guid id)
+    public async Task<Unit> Delete(Guid id)
     {
-        
+        return await Mediator.Send(new DeleteFeatureCommand(id));
     }
-}
-
-public sealed class CreateFeature
-{
-    public string Domain { get; set; } // Api, Frontend, both?
-    public string Product { get; set; } // PayEngine, Exporter etc.
-    public string Name { get; set; } // Api, Frontend, both?
-}
-
-public sealed class UpdateFeature
-{
-    public int DbId { get; set; }
-    public Guid Id { get; set; }
-    public string Domain { get; set; } // Api, Frontend, both?
-    public string Product { get; set; } // PayEngine, Exporter etc.
-    public string Name { get; set; } // Api, Frontend, both?
-    public IEnumerable<FeatureState> EnvironmentStates { get; set; } // Whether it is turned on. Need to make this an object (for each env).
 }
