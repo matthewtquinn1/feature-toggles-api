@@ -1,7 +1,7 @@
 ﻿using FeatureToggle.Domain.Entities;
 using MediatR;
 
-namespace FeatureToggle.Application.FeatureToggles.Commands;
+namespace FeatureToggle.Application.Features.Commands;
 
 public sealed record UpdateFeatureCommand(
     int DbId,

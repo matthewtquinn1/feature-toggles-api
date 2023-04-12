@@ -1,3 +1,5 @@
+using FeatureToggle.Application.Features.Commands;
+using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Application.FeatureToggles.Commands;
 using FeatureToggle.Application.FeatureToggles.Queries;
 using FeatureToggle.Domain.Entities;
@@ -29,7 +31,7 @@ public class FeaturesController : ControllerBase
     [HttpGet("{id:Guid}")]
     public async Task<Feature> GetById(Guid id)
     {
-        return await Mediator.Send(new GetFeaturesByIdQuery(id));
+        return await Mediator.Send(new GetFeatureByIdQuery(id));
     }
 
     [HttpPost]

@@ -2,7 +2,7 @@
 using FeatureToggle.Domain.Enums;
 using MediatR;
 
-namespace FeatureToggle.Application.FeatureToggles.Commands;
+namespace FeatureToggle.Application.Features.Commands;
 
 public sealed record ToggleFeatureStatusCommand(
     Guid id, 

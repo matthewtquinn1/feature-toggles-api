@@ -1,9 +1,9 @@
 ﻿using FeatureToggle.Domain.Entities;
 using MediatR;
 
-namespace FeatureToggle.Application.FeatureToggles.Queries;
+namespace FeatureToggle.Application.Features.Queries;
 
-public record GetFeaturesQuery() : IRequest<List<Feature>>;
+public sealed record GetFeaturesQuery() : IRequest<List<Feature>>;
 
 public sealed class GetFeaturesQueryHandler : IRequestHandler<GetFeaturesQuery, List<Feature>>
 {
