@@ -18,6 +18,8 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
+app.ApplyFeatureToggleMigrations();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
