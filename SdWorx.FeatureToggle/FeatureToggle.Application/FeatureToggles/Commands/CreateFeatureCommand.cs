@@ -3,8 +3,7 @@
 namespace FeatureToggle.Application.FeatureToggles.Commands;
 
 public sealed record CreateFeatureCommand(
-    string Domain ,// Api, Frontend, both?
-    string Product, // PayEngine, Exporter etc.
+    Guid ProductId,
     string Name) : IRequest<Guid>;
 
 public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, Guid>

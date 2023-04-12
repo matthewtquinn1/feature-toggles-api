@@ -6,8 +6,7 @@ namespace FeatureToggle.Application.FeatureToggles.Commands;
 public sealed record UpdateFeatureCommand(
     int DbId,
     Guid Id,
-    string Domain,
-    Product Product,
+    Guid ProductId,
     string Name,
     IEnumerable<FeatureState> EnvironmentStates) : IRequest<Feature>;
 
