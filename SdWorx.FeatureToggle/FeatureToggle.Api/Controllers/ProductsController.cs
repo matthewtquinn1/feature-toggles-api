@@ -8,11 +8,8 @@ namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController : ControllerBase
+public class ProductsController : MediatorControllerBase
 {
-    private ISender _mediator = null!;
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
-
     private readonly ILogger<ProductsController> _logger;
 
 	public ProductsController(ILogger<ProductsController> logger)
@@ -23,19 +20,19 @@ public class ProductsController : ControllerBase
 	[HttpGet]
 	public async Task<List<Product>> Get()
 	{
-		return await _mediator.Send(new GetProductsQuery());
+		return await Mediator.Send(new GetProductsQuery());
 	}
 
     [HttpGet("{id:Guid}")]
     public async Task<Product> GetById(Guid id)
     {
-        return await _mediator.Send(new GetProductByIdQuery(id));
+        return await Mediator.Send(new GetProductByIdQuery(id));
     }
 
     [HttpPost]
     public async Task<Guid> Create(CreateProductCommand command)
     {
-        return await _mediator.Send(command);
+        return await Mediator.Send(command);
     }
 
     [HttpPut("{id:Guid}")]
@@ -43,12 +40,12 @@ public class ProductsController : ControllerBase
     {
         // TODO: Throw exception if id != command.Id.
 
-        return await _mediator.Send(command);
+        return await Mediator.Send(command);
     }
 
     [HttpDelete("{id:Guid}")]
     public async Task<Unit> Delete(Guid id)
     {
-        return await _mediator.Send(new DeleteProductCommand(id));
+        return await Mediator.Send(new DeleteProductCommand(id));
     }
 }

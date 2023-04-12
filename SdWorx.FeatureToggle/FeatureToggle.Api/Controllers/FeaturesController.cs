@@ -1,7 +1,5 @@
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Features.Queries;
-using FeatureToggle.Application.FeatureToggles.Commands;
-using FeatureToggle.Application.FeatureToggles.Queries;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +8,8 @@ namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FeaturesController : ControllerBase
+public class FeaturesController : MediatorControllerBase
 {
-    private ISender _mediator = null!;
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
-
     private readonly ILogger<FeaturesController> _logger;
 
     public FeaturesController(ILogger<FeaturesController> logger)
