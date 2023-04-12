@@ -1,4 +1,5 @@
 using FeatureToggle.Application;
+using FeatureToggle.Application.Common.Interfaces;
 using FeatureToggle.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistence(builder.Configuration.GetConnectionString("FeatureToggle"));
+builder.Services.AddScoped<IApplicationDbContext>(serviceProvider => serviceProvider.GetRequiredService<FeatureToggleContext>());
 
 builder.Services.AddApplicationServices();
 

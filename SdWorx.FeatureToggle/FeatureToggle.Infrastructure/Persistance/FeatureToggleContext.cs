@@ -1,12 +1,14 @@
-﻿using FeatureToggle.Domain.Entities;
+﻿using FeatureToggle.Application.Common.Interfaces;
+using FeatureToggle.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Infrastructure.Persistance;
 
-public sealed class FeatureToggleContext : DbContext
+public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
 {
     public DbSet<Feature> Features { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<FeatureState> FeatureStates { get; set; }
 
     public FeatureToggleContext(DbContextOptions<FeatureToggleContext> options)
         : base(options)
