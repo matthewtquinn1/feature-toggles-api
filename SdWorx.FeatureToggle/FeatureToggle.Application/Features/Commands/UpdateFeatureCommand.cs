@@ -1,20 +1,59 @@
-﻿using FeatureToggle.Domain.Entities;
+﻿using FeatureToggle.Application.Common.Exceptions;
+using FeatureToggle.Application.Common.Interfaces;
+using FeatureToggle.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Features.Commands;
 
 public sealed record UpdateFeatureCommand(
-    int DbId,
     Guid Id,
     Guid ProductId,
     string Name,
-    IEnumerable<FeatureState> EnvironmentStates) : IRequest<Feature>;
+    ICollection<FeatureState> FeatureStates) : IRequest<Feature>;
 
 public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, Feature>
 {
-    public Task<Feature> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _context;
+
+    public UpdateFeatureCommandHandler(IApplicationDbContext context)
     {
-        // TODO: Implement.
-        return Task.FromResult(new Feature());
+        _context = context;
+    }
+
+    public async Task<Feature> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "Cannot update a feature when request is null.");
+        }
+
+        var feature = await _context.Features
+            .Include(f => f.Product)
+            .Include(f => f.FeatureStates)
+            .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
+
+        if (feature == null)
+        {
+            throw new NotFoundException(nameof(feature), request.Id);
+        }
+
+        feature.Name = request.Name;
+        feature.FeatureStates = request.FeatureStates;
+
+        // Only look for the product in the request when it is changed.
+        var product = feature.Product.Id == request.ProductId
+            ? feature.Product
+            : await _context.Products.FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken)
+                ?? throw new NotFoundException(nameof(feature.Product), request.ProductId);
+
+        feature.Product = product;
+        feature.ProductDbId = product.DbId;
+
+
+        _ = _context.Features.Update(feature);
+        _ = await _context.SaveChangesAsync(cancellationToken);
+
+        return feature;
     }
 }

@@ -1,5 +1,7 @@
-﻿using FeatureToggle.Domain.Entities;
+﻿using FeatureToggle.Application.Common.Interfaces;
+using FeatureToggle.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Features.Queries;
 
@@ -7,9 +9,24 @@ public sealed record GetFeaturesQuery() : IRequest<List<Feature>>;
 
 public sealed class GetFeaturesQueryHandler : IRequestHandler<GetFeaturesQuery, List<Feature>>
 {
-	public Task<List<Feature>> Handle(GetFeaturesQuery request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _context;
+
+    public GetFeaturesQueryHandler(IApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+	public async Task<List<Feature>> Handle(GetFeaturesQuery request, CancellationToken cancellationToken)
 	{
-		// TODO: Implement.
-		return Task.FromResult(new List<Feature>());
-	}
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "Cannot find feature when request is null");
+        }
+
+        return await _context.Features
+            .Include(f => f.Product)
+            .Include(f => f.FeatureStates)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -1,14 +1,38 @@
-﻿using MediatR;
+﻿using FeatureToggle.Application.Common.Exceptions;
+using FeatureToggle.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Features.Commands;
 
-public sealed record DeleteFeatureCommand(Guid id) : IRequest<Unit>;
+public sealed record DeleteFeatureCommand(Guid Id) : IRequest<Unit>;
 
 public sealed class DeleteFeatureCommandHandler : IRequestHandler<DeleteFeatureCommand, Unit>
 {
-    public Task<Unit> Handle(DeleteFeatureCommand request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _context;
+
+    public DeleteFeatureCommandHandler(IApplicationDbContext context)
     {
-        // TODO: Implement.
-        return Task.FromResult(Unit.Value);
+        _context = context;
+    }
+
+    public async Task<Unit> Handle(DeleteFeatureCommand request, CancellationToken cancellationToken)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "Cannot delete a feature when request is null.");
+        }
+
+        var feature = await _context.Features.FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
+
+        if (feature == null)
+        {
+            throw new NotFoundException(nameof(feature), request.Id);
+        }
+
+        _ = _context.Features.Remove(feature);
+        _ = await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }
