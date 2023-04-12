@@ -9,6 +9,6 @@ public sealed class FeatureState
     public FeatureEnvironment Environment { get; set; }
     public bool IsActive { get; set; }
 
-    public int FeatureDbId { get; set; } // FK.
+    public int FeatureDbId { get; set; }
     public Feature Feature { get; set; }
 }
