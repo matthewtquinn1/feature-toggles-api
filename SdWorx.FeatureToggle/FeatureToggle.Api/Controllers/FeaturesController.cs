@@ -1,7 +1,6 @@
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Domain.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.Api.Controllers;
@@ -18,42 +17,52 @@ public class FeaturesController : MediatorControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Feature>> Get()
+    [ProducesResponseType(typeof(List<Feature>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Get()
     {
-        return await Mediator.Send(new GetFeaturesQuery());
+        return Ok(await Mediator.Send(new GetFeaturesQuery()));
     }
 
     [HttpGet("{id:Guid}")]
-    public async Task<Feature> GetById(Guid id)
+    [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        return await Mediator.Send(new GetFeatureByIdQuery(id));
+        return Ok(await Mediator.Send(new GetFeatureByIdQuery(id)));
     }
 
     [HttpPost]
-    public async Task<Guid> Create(CreateFeatureCommand command)
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Create(CreateFeatureCommand command)
     {
-        return await Mediator.Send(command);
+        return Ok(await Mediator.Send(command));
     }
 
+    // TODO: This needs reworked.
     [HttpPut("{id:Guid}")]
-    public async Task<Feature> Update(Guid id, UpdateFeatureCommand command)
+    [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
     {
         // TODO: Throw exception when id != command.Id.
 
-        return await Mediator.Send(command);
+        return Ok(await Mediator.Send(command));
     }
 
+    // TODO: This needs reworked.
     [HttpPatch("{id:Guid}")]
-    public async Task<Feature> ToggleActiveState(Guid id, ToggleFeatureStatusCommand command)
+    [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ToggleActiveState(Guid id, ToggleFeatureStatusCommand command)
     {
         // TODO: Throw exception when id != command.Id.
 
-        return await Mediator.Send(command);
+        return Ok(await Mediator.Send(command));
     }
 
     [HttpDelete("{id:Guid}")]
-    public async Task<Unit> Delete(Guid id)
+    [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        return await Mediator.Send(new DeleteFeatureCommand(id));
+        _ = await Mediator.Send(new DeleteFeatureCommand(id));
+
+        return NoContent();
     }
 }
