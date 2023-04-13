@@ -21,6 +21,10 @@ public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
             entity.HasKey(product => product.DbId);
 
             entity
+                .Property(product => product.Id)
+                .HasDefaultValueSql("NewId()");
+
+            entity
                 .Property(product => product.Name)
                 .HasMaxLength(250)
                 .IsRequired();
@@ -37,6 +41,10 @@ public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
             entity.HasKey(feature => feature.DbId);
 
             entity
+                .Property(feature => feature.Id)
+                .HasDefaultValueSql("NewId()");
+
+            entity
                 .Property(feature => feature.Name)
                 .HasMaxLength(100)
                 .IsRequired();
@@ -51,6 +59,10 @@ public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
         modelBuilder.Entity<FeatureState>(entity =>
         {
             entity.HasKey(state => state.DbId);
+
+            entity
+                .Property(state => state.Id)
+                .HasDefaultValueSql("NewId()");
         });
     }
 }
