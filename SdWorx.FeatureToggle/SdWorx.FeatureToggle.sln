@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Domain", "Fea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Application", "FeatureToggle.Application\FeatureToggle.Application.csproj", "{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureToggle.Infrastructure", "FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj", "{DB4AF7A1-E97D-4B16-BF9B-49985EC8E5CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Infrastructure", "FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj", "{DB4AF7A1-E97D-4B16-BF9B-49985EC8E5CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{98EE6B43-798E-4D7A-B2A5-A9A482BDDB41}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FC6A9A40-1BFC-4C94-93A2-E24425F90D29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +40,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5C5932DD-294E-4D14-AAD7-ED1602E965C2} = {98EE6B43-798E-4D7A-B2A5-A9A482BDDB41}
+		{0B710E73-55E9-41A1-8A4E-EC016DE8E58C} = {98EE6B43-798E-4D7A-B2A5-A9A482BDDB41}
+		{907DF024-41F1-41AF-A0F2-B63EB9CE3EC4} = {98EE6B43-798E-4D7A-B2A5-A9A482BDDB41}
+		{DB4AF7A1-E97D-4B16-BF9B-49985EC8E5CB} = {98EE6B43-798E-4D7A-B2A5-A9A482BDDB41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F136E9-53F3-4371-8808-DAA5238E1960}
