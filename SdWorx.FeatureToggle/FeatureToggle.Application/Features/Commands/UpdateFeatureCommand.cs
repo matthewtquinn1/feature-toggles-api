@@ -39,7 +39,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         }
 
         feature.Name = request.Name;
-        feature.FeatureStates = request.FeatureStates;
+        feature.FeatureStates = request.FeatureStates; // TODO: This won't work. Need to either have existing & new states to work with, OR update using PATCH endpoint only.
 
         // Only look for the product in the request when it is changed.
         var product = feature.Product.Id == request.ProductId

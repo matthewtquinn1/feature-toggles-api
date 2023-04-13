@@ -1,5 +1,6 @@
 ﻿using FeatureToggle.Application.Common.Exceptions;
 using FeatureToggle.Application.Common.Interfaces;
+using FeatureToggle.Application.FeatureStates.Commands;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace FeatureToggle.Application.Features.Commands;
 public sealed record CreateFeatureCommand(
     Guid ProductId,
     string Name,
-    ICollection<FeatureState> FeatureStates) : IRequest<Guid>;
+    ICollection<CreateFeatureStateCommand> FeatureStates) : IRequest<Guid>;
 
 public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, Guid>
 {
@@ -40,6 +41,8 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
             ProductDbId = product.DbId,
             Product = product,
             FeatureStates = request.FeatureStates
+                .Select(state => new FeatureState { Environment = state.Environment, IsActive = state.IsActive })
+                .ToList()
         };
 
         _ = await _context.Features.AddAsync(feature, cancellationToken);
