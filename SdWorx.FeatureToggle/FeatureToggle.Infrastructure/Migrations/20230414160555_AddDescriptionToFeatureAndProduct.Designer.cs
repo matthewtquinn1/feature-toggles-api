@@ -4,6 +4,7 @@ using FeatureToggle.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureToggle.Infrastructure.Migrations
 {
     [DbContext(typeof(FeatureToggleContext))]
-    partial class FeatureToggleContextModelSnapshot : ModelSnapshot
+    [Migration("20230414160555_AddDescriptionToFeatureAndProduct")]
+    partial class AddDescriptionToFeatureAndProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

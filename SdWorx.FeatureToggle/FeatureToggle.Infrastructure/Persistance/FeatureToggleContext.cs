@@ -30,6 +30,11 @@ public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
                 .IsRequired();
 
             entity
+                .Property(product => product.Description)
+                .HasMaxLength(500)
+                .IsRequired();
+
+            entity
                 .HasMany(product => product.Features)
                 .WithOne(feature => feature.Product)
                 .HasForeignKey(feature => feature.ProductDbId)
@@ -47,6 +52,11 @@ public sealed class FeatureToggleContext : DbContext, IApplicationDbContext
             entity
                 .Property(feature => feature.Name)
                 .HasMaxLength(100)
+                .IsRequired();
+
+            entity
+                .Property(product => product.Description)
+                .HasMaxLength(500)
                 .IsRequired();
 
             entity

@@ -10,6 +10,7 @@ namespace FeatureToggle.Application.Features.Commands;
 public sealed record CreateFeatureCommand(
     Guid ProductId,
     string Name,
+    string Description,
     ICollection<CreateFeatureStateCommand> FeatureStates) : IRequest<Guid>;
 
 public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, Guid>
@@ -38,6 +39,7 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
         var feature = new Feature
         {
             Name = request.Name,
+            Description = request.Description,
             ProductDbId = product.DbId,
             Product = product,
             FeatureStates = request.FeatureStates

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace FeatureToggle.Application.Products.Commands;
 
-public sealed record CreateProductCommand(string Name) : IRequest<Guid>;
+public sealed record CreateProductCommand(string Name, string Description) : IRequest<Guid>;
 
 public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
 {
@@ -24,7 +24,7 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
             throw new ArgumentNullException(nameof(request), "Cannot create a product when request is null.");
         }
 
-        var product = new Product { Name = request.Name };
+        var product = new Product { Name = request.Name, Description = request.Description };
 
         _ = await _context.Products.AddAsync(product, cancellationToken);
         _ = await _context.SaveChangesAsync(cancellationToken);
