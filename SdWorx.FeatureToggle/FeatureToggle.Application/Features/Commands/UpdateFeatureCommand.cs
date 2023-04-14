@@ -9,8 +9,7 @@ namespace FeatureToggle.Application.Features.Commands;
 public sealed record UpdateFeatureCommand(
     Guid Id,
     Guid ProductId,
-    string Name,
-    ICollection<FeatureState> FeatureStates) : IRequest<Feature>;
+    string Name) : IRequest<Feature>;
 
 public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, Feature>
 {
@@ -39,7 +38,6 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         }
 
         feature.Name = request.Name;
-        feature.FeatureStates = request.FeatureStates; // TODO: This won't work. Need to either have existing & new states to work with, OR update using PATCH endpoint only.
 
         // Only look for the product in the request when it is changed.
         var product = feature.Product.Id == request.ProductId
@@ -49,7 +47,6 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
 
         feature.Product = product;
         feature.ProductDbId = product.DbId;
-
 
         _ = _context.Features.Update(feature);
         _ = await _context.SaveChangesAsync(cancellationToken);

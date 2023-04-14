@@ -37,20 +37,9 @@ public class FeaturesController : MediatorControllerBase
         return Ok(await Mediator.Send(command));
     }
 
-    // TODO: This needs reworked.
-    [HttpPut("{id:Guid}")]
-    [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
-    {
-        // TODO: Throw exception when id != command.Id.
-
-        return Ok(await Mediator.Send(command));
-    }
-
-    // TODO: This needs reworked.
     [HttpPatch("{id:Guid}")]
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ToggleActiveState(Guid id, ToggleFeatureStatusCommand command)
+    public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
     {
         // TODO: Throw exception when id != command.Id.
 
