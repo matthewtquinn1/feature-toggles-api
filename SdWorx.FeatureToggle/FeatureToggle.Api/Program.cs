@@ -18,6 +18,16 @@ builder.Services.AddScoped<IApplicationDbContext>(serviceProvider => serviceProv
 
 builder.Services.AddApplicationServices();
 
+builder.Services.AddCors(
+    o => o.AddPolicy(
+        "AllowAll",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        }));
+
 var app = builder.Build();
 
 app.ApplyFeatureToggleMigrations();
@@ -30,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
