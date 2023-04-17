@@ -35,6 +35,15 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
             throw new NotFoundException(nameof(product), request.ProductId);
         }
 
+        var existingFeature = await _context.Features
+            .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.Name == request.Name, cancellationToken);
+
+        if (existingFeature != null)
+        {
+            throw new Exception(string.Format("Feature with the name {0} already exists.", request.Name));
+        }
+
         var feature = new Feature
         {
             Name = request.Name,

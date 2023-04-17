@@ -37,6 +37,15 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
             throw new NotFoundException(nameof(feature), request.Id);
         }
 
+        var existingFeature = await _context.Features
+            .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.Name == request.Name, cancellationToken);
+
+        if (existingFeature != null)
+        {
+            throw new Exception(string.Format("Feature with the name {0} already exists.", request.Name));
+        }
+
         feature.Name = request.Name;
 
         // Only look for the product in the request when it is changed.
