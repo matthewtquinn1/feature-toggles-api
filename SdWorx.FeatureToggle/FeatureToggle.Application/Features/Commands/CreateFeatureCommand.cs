@@ -1,7 +1,7 @@
 ﻿using FeatureToggle.Application.Common.Exceptions;
 using FeatureToggle.Application.Common.Interfaces;
-using FeatureToggle.Application.FeatureStates.Commands;
 using FeatureToggle.Domain.Entities;
+using FeatureToggle.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +10,7 @@ namespace FeatureToggle.Application.Features.Commands;
 public sealed record CreateFeatureCommand(
     Guid ProductId,
     string Name,
-    string Description,
-    ICollection<CreateFeatureStateCommand> FeatureStates) : IRequest<Guid>;
+    string Description) : IRequest<Guid>;
 
 public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, Guid>
 {
@@ -42,10 +41,15 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
             Description = request.Description,
             ProductDbId = product.DbId,
             Product = product,
-            FeatureStates = request.FeatureStates
-                .Select(state => new FeatureState { Environment = state.Environment, IsActive = state.IsActive })
-                .ToList()
         };
+
+        // Simpler to just create all states for a feature and default values to false.
+        var featureStates = new List<FeatureState>();
+        foreach (var state in (FeatureEnvironment[])Enum.GetValues(typeof(FeatureEnvironment)))
+        {
+            featureStates.Add(new() { Environment = state, IsActive = false });
+        }
+        feature.FeatureStates = featureStates;
 
         _ = await _context.Features.AddAsync(feature, cancellationToken);
         _ = await _context.SaveChangesAsync(cancellationToken);
