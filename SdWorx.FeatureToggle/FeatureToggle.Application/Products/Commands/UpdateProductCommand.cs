@@ -37,7 +37,7 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
 
         if (existingProduct != null)
         {
-            throw new Exception(string.Format("Product with the name {0} already exists.", request.Name));
+            throw new DuplicateFoundException(nameof(Product), nameof(request.Name), request.Name);
         }
 
         product.Name = request.Name;

@@ -43,7 +43,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
 
         if (existingFeature != null)
         {
-            throw new Exception(string.Format("Feature with the name {0} already exists.", request.Name));
+            throw new DuplicateFoundException(nameof(Feature), nameof(request.Name), request.Name);
         }
 
         feature.Name = request.Name;

@@ -1,6 +1,5 @@
 ﻿using FeatureToggle.Application.Common.Exceptions;
 using FeatureToggle.Application.Common.Interfaces;
-using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +30,7 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
 
         if (existingProduct != null)
         {
-            throw new Exception(string.Format("Product with the name {0} already exists.", request.Name));
+            throw new DuplicateFoundException(nameof(Product), nameof(request.Name), request.Name);
         }
 
         var product = new Product { Name = request.Name, Description = request.Description };
