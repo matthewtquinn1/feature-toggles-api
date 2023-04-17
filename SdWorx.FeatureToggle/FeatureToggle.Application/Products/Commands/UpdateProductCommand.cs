@@ -31,6 +31,15 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
             throw new NotFoundException(nameof(product), request.Id);
         }
 
+        var existingProduct = await _context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
+
+        if (existingProduct != null)
+        {
+            throw new Exception(string.Format("Product with the name {0} already exists.", request.Name));
+        }
+
         product.Name = request.Name;
 
         _ = _context.Products.Update(product);
