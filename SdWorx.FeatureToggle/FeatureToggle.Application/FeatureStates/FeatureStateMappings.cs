@@ -1,5 +1,4 @@
-﻿using FeatureToggle.Application.Features;
-using FeatureToggle.Domain.Entities;
+﻿using FeatureToggle.Domain.Entities;
 
 namespace FeatureToggle.Application.FeatureStates;
 
@@ -10,7 +9,6 @@ internal static class FeatureStateMappings
         return new FeatureStateDto(
             featureState.Id,
             featureState.Environment,
-            featureState.IsActive,
-            featureState.Feature.MapToDto());
+            featureState.IsActive);
     }
 }
