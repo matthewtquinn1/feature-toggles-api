@@ -1,13 +1,12 @@
 ﻿using FeatureToggle.Application.Common.Interfaces;
-using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Features.Queries;
 
-public sealed record GetFeatureByIdQuery(Guid Id) : IRequest<Feature?>;
+public sealed record GetFeatureByIdQuery(Guid Id) : IRequest<FeatureDto?>;
 
-public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQuery, Feature?>
+public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQuery, FeatureDto?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -16,7 +15,7 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
         _context = context;
     }
 
-    public async Task<Feature?> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
+    public async Task<FeatureDto?> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -34,6 +33,6 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
             return null;
         }
 
-        return feature;
+        return feature.MapToDto();
     }
 }

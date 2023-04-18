@@ -8,9 +8,9 @@ namespace FeatureToggle.Application.FeatureStates.Commands;
 
 public sealed record UpdateFeatureStateCommand(
     Guid Id,
-    bool IsActive) : IRequest<FeatureState>;
+    bool IsActive) : IRequest<FeatureStateDto>;
 
-public sealed class UpdateFeatureStateCommandHandler : IRequestHandler<UpdateFeatureStateCommand, FeatureState>
+public sealed class UpdateFeatureStateCommandHandler : IRequestHandler<UpdateFeatureStateCommand, FeatureStateDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -19,7 +19,7 @@ public sealed class UpdateFeatureStateCommandHandler : IRequestHandler<UpdateFea
         _context = context;
     }
 
-    public async Task<FeatureState> Handle(UpdateFeatureStateCommand request, CancellationToken cancellationToken)
+    public async Task<FeatureStateDto> Handle(UpdateFeatureStateCommand request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -39,6 +39,6 @@ public sealed class UpdateFeatureStateCommandHandler : IRequestHandler<UpdateFea
         _ = _context.FeatureStates.Update(featureState);
         _ = await _context.SaveChangesAsync(cancellationToken);
 
-        return featureState;
+        return featureState.MapToDto();
     }
 }

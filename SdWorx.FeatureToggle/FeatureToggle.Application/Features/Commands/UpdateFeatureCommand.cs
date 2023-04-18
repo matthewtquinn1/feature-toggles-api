@@ -10,9 +10,9 @@ public sealed record UpdateFeatureCommand(
     Guid Id,
     Guid ProductId,
     string Name,
-    string Description) : IRequest<Feature>;
+    string Description) : IRequest<FeatureDto>;
 
-public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, Feature>
+public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, FeatureDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,7 +21,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         _context = context;
     }
 
-    public async Task<Feature> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
+    public async Task<FeatureDto> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -62,6 +62,6 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         _ = _context.Features.Update(feature);
         _ = await _context.SaveChangesAsync(cancellationToken);
 
-        return feature;
+        return feature.MapToDto();
     }
 }

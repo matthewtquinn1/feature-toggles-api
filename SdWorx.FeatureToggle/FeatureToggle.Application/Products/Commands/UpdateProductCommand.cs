@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Products.Commands;
 
-public sealed record UpdateProductCommand(Guid Id, string Name) : IRequest<Product>;
+public sealed record UpdateProductCommand(Guid Id, string Name) : IRequest<ProductDto>;
 
-public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Product>
+public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,7 +17,7 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
         _context = context;
     }
 
-    public async Task<Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -45,6 +45,6 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
         _ = _context.Products.Update(product);
         _ = await _context.SaveChangesAsync(cancellationToken);
 
-        return product;
+        return product.MapToDto();
     }
 }

@@ -1,13 +1,12 @@
 ﻿using FeatureToggle.Application.Common.Interfaces;
-using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Products.Queries;
 
-public sealed record GetProductByIdQuery(Guid Id) : IRequest<Product?>;
+public sealed record GetProductByIdQuery(Guid Id) : IRequest<ProductDto?>;
 
-public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Product?>
+public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -16,7 +15,7 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
         _context = context;
     }
 
-    public async Task<Product?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -34,6 +33,6 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
             return null;
         }
 
-        return product;
+        return product.MapToDto();
     }
 }
