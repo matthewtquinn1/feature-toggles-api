@@ -1,15 +1,13 @@
-﻿using FeatureToggle.Application.Common.Exceptions;
-using FeatureToggle.Application.Common.Interfaces;
-using FeatureToggle.Application.Features.Queries;
+﻿using FeatureToggle.Application.Common.Interfaces;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Products.Queries;
 
-public sealed record GetProductByIdQuery(Guid Id) : IRequest<Product>;
+public sealed record GetProductByIdQuery(Guid Id) : IRequest<Product?>;
 
-public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Product>
+public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Product?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -18,7 +16,7 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
         _context = context;
     }
 
-    public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Product?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -33,7 +31,7 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
 
         if (product == null)
         {
-            throw new NotFoundException(nameof(product), request.Id);
+            return null;
         }
 
         return product;

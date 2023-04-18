@@ -1,14 +1,13 @@
-﻿using FeatureToggle.Application.Common.Exceptions;
-using FeatureToggle.Application.Common.Interfaces;
+﻿using FeatureToggle.Application.Common.Interfaces;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Features.Queries;
 
-public sealed record GetFeatureByIdQuery(Guid Id) : IRequest<Feature>;
+public sealed record GetFeatureByIdQuery(Guid Id) : IRequest<Feature?>;
 
-public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQuery, Feature>
+public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQuery, Feature?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,7 +16,7 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
         _context = context;
     }
 
-    public async Task<Feature> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Feature?> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -32,7 +31,7 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
 
         if (feature == null)
         {
-            throw new NotFoundException(nameof(feature), request.Id);
+            return null;
         }
 
         return feature;

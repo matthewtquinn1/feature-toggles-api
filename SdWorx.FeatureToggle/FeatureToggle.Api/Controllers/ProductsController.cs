@@ -27,7 +27,11 @@ public class ProductsController : MediatorControllerBase
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById(Guid id)
     {
-        return Ok(await Mediator.Send(new GetProductByIdQuery(id)));
+        var product = await Mediator.Send(new GetProductByIdQuery(id));
+
+        return product == null
+            ? NotFound()
+            : Ok(product);
     }
 
     [HttpPost]

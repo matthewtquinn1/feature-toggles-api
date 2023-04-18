@@ -27,7 +27,11 @@ public class FeaturesController : MediatorControllerBase
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById(Guid id)
     {
-        return Ok(await Mediator.Send(new GetFeatureByIdQuery(id)));
+        var feature = await Mediator.Send(new GetFeatureByIdQuery(id));
+
+        return feature == null
+            ? NotFound()
+            : Ok(feature);
     }
 
     [HttpPost]
