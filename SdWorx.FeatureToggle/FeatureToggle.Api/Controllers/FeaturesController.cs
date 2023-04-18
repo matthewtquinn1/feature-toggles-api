@@ -17,7 +17,7 @@ public class FeaturesController : MediatorControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(List<Feature>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Feature>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get()
     {
         return Ok(await Mediator.Send(new GetFeaturesQuery()));
