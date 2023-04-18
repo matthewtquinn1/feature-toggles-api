@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Products.Commands;
 
-public sealed record UpdateProductCommand(Guid Id, string Name) : IRequest<ProductDto>;
+public sealed record UpdateProductCommand(Guid Id, string Name, string Description) : IRequest<ProductDto>;
 
 public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto>
 {
@@ -36,6 +36,7 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
         }
 
         product.Name = request.Name;
+        product.Description = request.Description;
 
         _ = _context.Products.Update(product);
         _ = await _context.SaveChangesAsync(cancellationToken);
