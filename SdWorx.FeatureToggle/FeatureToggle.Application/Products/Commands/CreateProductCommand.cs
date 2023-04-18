@@ -19,11 +19,6 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
 
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot create a product when request is null.");
-        }
-
         var existingProduct = await _context.Products
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);

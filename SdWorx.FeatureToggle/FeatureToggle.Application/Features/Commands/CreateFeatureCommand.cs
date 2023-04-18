@@ -23,11 +23,6 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
 
     public async Task<Guid> Handle(CreateFeatureCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot create a feature when request is null.");
-        }
-
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
         if (product == null)

@@ -19,11 +19,6 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
 
     public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot update a product when request is null.");
-        }
-
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product == null)

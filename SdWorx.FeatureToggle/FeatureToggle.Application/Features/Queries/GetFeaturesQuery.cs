@@ -17,11 +17,6 @@ public sealed class GetFeaturesQueryHandler : IRequestHandler<GetFeaturesQuery, 
 
 	public async Task<List<FeatureDto>> Handle(GetFeaturesQuery request, CancellationToken cancellationToken)
 	{
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot find feature when request is null");
-        }
-
         return await _context.Features
             .Include(f => f.Product)
             .Include(f => f.FeatureStates)

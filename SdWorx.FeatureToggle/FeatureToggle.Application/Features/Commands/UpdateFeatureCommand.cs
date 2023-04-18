@@ -23,11 +23,6 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
 
     public async Task<FeatureDto> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot update a feature when request is null.");
-        }
-
         var feature = await _context.Features
             .Include(f => f.Product)
             .Include(f => f.FeatureStates)

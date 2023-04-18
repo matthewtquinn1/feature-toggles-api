@@ -21,11 +21,6 @@ public sealed class UpdateFeatureStateCommandHandler : IRequestHandler<UpdateFea
 
     public async Task<FeatureStateDto> Handle(UpdateFeatureStateCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot toggle a feature's status when request is null.");
-        }
-
         var featureState = await _context.FeatureStates
             .FirstOrDefaultAsync(feature => feature.Id == request.Id, cancellationToken);
 

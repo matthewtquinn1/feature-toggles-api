@@ -18,11 +18,6 @@ public sealed class DeleteFeatureCommandHandler : IRequestHandler<DeleteFeatureC
 
     public async Task<Unit> Handle(DeleteFeatureCommand request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot delete a feature when request is null.");
-        }
-
         var feature = await _context.Features.FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
 
         if (feature == null)
