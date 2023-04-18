@@ -9,7 +9,8 @@ namespace FeatureToggle.Application.Features.Commands;
 public sealed record UpdateFeatureCommand(
     Guid Id,
     Guid ProductId,
-    string Name) : IRequest<Feature>;
+    string Name,
+    string Description) : IRequest<Feature>;
 
 public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, Feature>
 {
@@ -47,6 +48,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         }
 
         feature.Name = request.Name;
+        feature.Description = request.Description;
 
         // Only look for the product in the request when it is changed.
         var product = feature.Product.Id == request.ProductId
