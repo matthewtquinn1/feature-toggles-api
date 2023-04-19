@@ -28,7 +28,7 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
 
         var existingProduct = await _context.Products
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
+            .FirstOrDefaultAsync(p => p.Name == request.Name && p.Id != request.Id, cancellationToken);
 
         if (existingProduct != null)
         {
