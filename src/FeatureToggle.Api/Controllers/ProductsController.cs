@@ -1,6 +1,6 @@
-﻿using FeatureToggle.Application.Products.Commands;
+﻿using FeatureToggle.Application.Products;
+using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Application.Products.Queries;
-using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,14 +22,15 @@ public class ProductsController : ControllerBase
     }
 
 	[HttpGet]
-    [ProducesResponseType(typeof(List<Product>), StatusCodes.Status200OK)]
-    public async Task<List<Product>> Get()
+    [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
+    public async Task<IEnumerable<ProductDto>> Get()
 	{
 		return await _mediator.Send(new GetProductsQuery());
 	}
 
     [HttpGet("{id:Guid}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var product = await _mediator.Send(new GetProductByIdQuery(id));
@@ -47,7 +48,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:Guid}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> Update(Guid id, UpdateProductCommand command)
     {
         // TODO: Throw exception if id != command.Id.
