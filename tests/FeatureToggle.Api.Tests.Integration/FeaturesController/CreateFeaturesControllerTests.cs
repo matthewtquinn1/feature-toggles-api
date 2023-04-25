@@ -4,13 +4,15 @@ using FeatureToggle.Application.Products;
 using FeatureToggle.Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using System.Net.Http.Json;
+using System.Net;
 using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
-namespace FeatureToggle.Api.Tests.Integration;
+namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
-public class FeaturesControllerTests : IClassFixture<WebApplicationFactory<IApiMarker>>, IAsyncLifetime
+[ExcludeFromCodeCoverage]
+public sealed class CreateFeaturesControllerTests : IClassFixture<WebApplicationFactory<IApiMarker>>, IAsyncLifetime
 {
     private readonly HttpClient _httpClient;
 
@@ -21,30 +23,10 @@ public class FeaturesControllerTests : IClassFixture<WebApplicationFactory<IApiM
 
     private readonly List<Guid> _createdIds = new();
 
-    public FeaturesControllerTests(WebApplicationFactory<IApiMarker> webApplicationFactory)
+    public CreateFeaturesControllerTests(WebApplicationFactory<IApiMarker> webApplicationFactory)
     {
         _httpClient = webApplicationFactory.CreateClient();
     }
-
-    [Fact]
-    public async Task GetById_ReturnsNotFound_WhenFeatureDoesNotExist()
-    {
-        // Act.
-        var response = await _httpClient.GetAsync($"api/features/{Guid.NewGuid()}");
-
-        // Assert.
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    }
-
-    //[Fact]
-    //public async Task GetById_ReturnsOk_WhenFeatureDoesExist()
-    //{
-    //    // Act.
-    //    var response = await _httpClient.GetAsync($"api/features/{Guid.NewGuid()}");
-
-    //    // Assert.
-    //    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    //}
 
     [Fact]
     public async Task Create_ReturnsCreated_WhenFeatureIsCreated()
