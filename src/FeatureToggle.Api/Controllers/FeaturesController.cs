@@ -43,7 +43,7 @@ public class FeaturesController : ControllerBase
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(CreateFeatureCommand command)
     {
-        return Ok(await _mediator.Send(command));
+        return CreatedAtAction(nameof(Create), await _mediator.Send(command));
     }
 
     [HttpPatch("{id:Guid}")]

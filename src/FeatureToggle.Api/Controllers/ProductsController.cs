@@ -44,7 +44,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(CreateProductCommand command)
     {
-        return Ok(await _mediator.Send(command));
+        return CreatedAtAction(nameof(Create), await _mediator.Send(command));
     }
 
     [HttpPut("{id:Guid}")]
