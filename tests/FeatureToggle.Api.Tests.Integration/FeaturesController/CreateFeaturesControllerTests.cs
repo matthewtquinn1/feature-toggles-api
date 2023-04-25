@@ -1,18 +1,17 @@
 ﻿using Bogus;
 using FeatureToggle.Application.Features.Commands;
-using FeatureToggle.Application.Products;
 using FeatureToggle.Domain.Entities;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using System.Net;
 using Xunit;
 using System.Diagnostics.CodeAnalysis;
+using FeatureToggle.Application.Products.Commands;
 
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
 [ExcludeFromCodeCoverage]
-public sealed class CreateFeaturesControllerTests : IClassFixture<WebApplicationFactory<IApiMarker>>, IAsyncLifetime
+public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>, IAsyncLifetime
 {
     private readonly HttpClient _httpClient;
 
@@ -23,21 +22,25 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<WebApplication
 
     private readonly List<Guid> _createdIds = new();
 
-    public CreateFeaturesControllerTests(WebApplicationFactory<IApiMarker> webApplicationFactory)
+    public CreateFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
     {
-        _httpClient = webApplicationFactory.CreateClient();
+        _httpClient = apiFactory.CreateClient();
     }
 
     [Fact]
     public async Task Create_ReturnsCreated_WhenFeatureIsCreated()
     {
         // Arrange.
-        var product = (await (await _httpClient.GetAsync("api/products"))
-            .Content.ReadFromJsonAsync<IEnumerable<ProductDto>>())
-            !.First();
+        var fakeProduct = new Faker<Product>()
+            .RuleFor(x => x.Name, f => f.Lorem.Word())
+            .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
+            .Generate();
+        var productCommand = new CreateProductCommand(fakeProduct.Name, fakeProduct.Description);
+        var productId = await (await _httpClient.PostAsJsonAsync<CreateProductCommand>("api/products", productCommand))
+            .Content.ReadFromJsonAsync<Guid>();
 
         var feature = _featureGenerator.Generate();
-        var command = new CreateFeatureCommand(product.Id, feature.Name, feature.Description);
+        var command = new CreateFeatureCommand(productId, feature.Name, feature.Description);
 
         // Act.
         var response = await _httpClient.PostAsJsonAsync("api/features", command);

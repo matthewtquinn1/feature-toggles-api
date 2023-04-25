@@ -7,13 +7,13 @@ using Xunit;
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
 [ExcludeFromCodeCoverage]
-public sealed class GetByIdFeaturesControllerTests : IClassFixture<WebApplicationFactory<IApiMarker>>
+public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
 {
     private readonly HttpClient _httpClient;
 
-    public GetByIdFeaturesControllerTests(WebApplicationFactory<IApiMarker> webApplicationFactory)
+    public GetByIdFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
     {
-        _httpClient = webApplicationFactory.CreateClient();
+        _httpClient = apiFactory.CreateClient();
     }
 
     [Fact]
