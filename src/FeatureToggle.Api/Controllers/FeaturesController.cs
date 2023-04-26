@@ -1,3 +1,4 @@
+using FeatureToggle.Application.Features;
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Domain.Entities;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/features")]
 public class FeaturesController : ControllerBase
 {
     private readonly ILogger<FeaturesController> _logger;
@@ -41,10 +42,13 @@ public class FeaturesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(FeatureDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(CreateFeatureCommand command)
     {
-        return CreatedAtAction(nameof(Create), await _mediator.Send(command));
+        var feature = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetById), new { feature.Id }, feature);
     }
 
     [HttpPatch("{id:Guid}")]

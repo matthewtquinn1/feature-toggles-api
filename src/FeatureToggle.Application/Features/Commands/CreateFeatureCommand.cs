@@ -4,15 +4,16 @@ using FeatureToggle.Domain.Entities;
 using FeatureToggle.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace FeatureToggle.Application.Features.Commands;
 
 public sealed record CreateFeatureCommand(
-    Guid ProductId,
-    string Name,
-    string Description) : IRequest<Guid>;
+    [Required] Guid ProductId,
+    [Required][MaxLength(100)] string Name,
+    [Required][MaxLength(500)] string Description) : IRequest<FeatureDto>;
 
-public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, Guid>
+public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureCommand, FeatureDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,7 +22,7 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateFeatureCommand request, CancellationToken cancellationToken)
+    public async Task<FeatureDto> Handle(CreateFeatureCommand request, CancellationToken cancellationToken)
     {
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
@@ -58,6 +59,6 @@ public sealed class CreateFeatureCommandHandler : IRequestHandler<CreateFeatureC
         _ = await _context.Features.AddAsync(feature, cancellationToken);
         _ = await _context.SaveChangesAsync(cancellationToken);
 
-        return feature.Id;
+        return feature.MapToDto();
     }
 }

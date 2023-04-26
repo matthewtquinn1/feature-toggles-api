@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/products")]
 public class ProductsController : ControllerBase
 {
     private readonly ILogger<ProductsController> _logger;
@@ -42,9 +42,12 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(CreateProductCommand command)
     {
-        return CreatedAtAction(nameof(Create), await _mediator.Send(command));
+        var product = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetById), new { product.Id }, product);
     }
 
     [HttpPut("{id:Guid}")]
