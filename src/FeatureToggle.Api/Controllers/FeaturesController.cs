@@ -30,6 +30,7 @@ public class FeaturesController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var feature = await _mediator.Send(new GetFeatureByIdQuery(id));
@@ -40,7 +41,7 @@ public class FeaturesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create(CreateFeatureCommand command)
     {
         return CreatedAtAction(nameof(Create), await _mediator.Send(command));

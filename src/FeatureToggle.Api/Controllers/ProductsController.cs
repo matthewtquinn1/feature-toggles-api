@@ -41,7 +41,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create(CreateProductCommand command)
     {
         return CreatedAtAction(nameof(Create), await _mediator.Send(command));
