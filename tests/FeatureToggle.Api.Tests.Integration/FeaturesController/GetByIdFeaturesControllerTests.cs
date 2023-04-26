@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Xunit;

@@ -11,7 +11,7 @@ using FeatureToggle.Application.Products.Commands;
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
 [ExcludeFromCodeCoverage]
-public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>, IAsyncLifetime
+public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
 {
     private readonly HttpClient _httpClient;
 
@@ -19,8 +19,6 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
         new Faker<Feature>()
             .RuleFor(x => x.Name, f => $"IntegrationTestData{f.Random.Word()}Enabled")
             .RuleFor(x => x.Description, f => f.Lorem.Sentences());
-
-    private readonly List<Guid> _createdIds = new();
 
     public CreateFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
     {
@@ -33,10 +31,10 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
         // Arrange.
         var fakeProduct = new Faker<Product>()
             .RuleFor(x => x.Name, f => f.Lorem.Word())
-            .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
+            .RuleFor(x => x.Description, f => f.Lorem.Sentence())
             .Generate();
         var productCommand = new CreateProductCommand(fakeProduct.Name, fakeProduct.Description);
-        var productId = await (await _httpClient.PostAsJsonAsync<CreateProductCommand>("api/products", productCommand))
+        var productId = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
             .Content.ReadFromJsonAsync<Guid>();
 
         var feature = _featureGenerator.Generate();
@@ -47,9 +45,6 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
 
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-
-        // Dispose.
-        _createdIds.Add(await response.Content.ReadFromJsonAsync<Guid>());
     }
 
     [Fact]
@@ -65,15 +60,5 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
 
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-    }
-
-    public Task InitializeAsync() => Task.CompletedTask;
-
-    public async Task DisposeAsync()
-    {
-        foreach (var id in _createdIds)
-        {
-            await _httpClient.DeleteAsync($"api/features/{id}");
-        }
     }
 }
