@@ -31,7 +31,6 @@ public sealed class FeatureToggleApiFactory : WebApplicationFactory<IApiMarker>,
             services.RemoveAll(typeof(IApplicationDbContext));
 
             services.AddPersistence(_dbContainer.GetConnectionString());
-            var x = _dbContainer.GetConnectionString();
             services.AddScoped<IApplicationDbContext>(serviceProvider => serviceProvider.GetRequiredService<FeatureToggleContext>());
         });
     }
