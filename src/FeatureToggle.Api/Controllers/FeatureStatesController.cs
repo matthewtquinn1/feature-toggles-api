@@ -26,6 +26,10 @@ public class FeatureStatesController : ControllerBase
     {
         // TODO: Throw exception when id != command.Id.
 
-        return Ok(await _mediator.Send(command));
+        var featureState = await _mediator.Send(command);
+
+        return featureState == null
+            ? NotFound()
+            : Ok(featureState);
     }
 }
