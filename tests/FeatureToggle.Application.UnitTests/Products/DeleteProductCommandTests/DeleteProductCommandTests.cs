@@ -1,5 +1,4 @@
-﻿using FeatureToggle.Application.Common.Exceptions;
-using FeatureToggle.Application.Products.Commands;
+﻿using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Domain.Entities;
 using NSubstitute;
 using Shouldly;
@@ -12,7 +11,7 @@ namespace FeatureToggle.Application.UnitTests.Products.DeleteProductCommandTests
 public sealed class DeleteProductCommandTests
 {
     [Fact]
-    public async Task Handle_WhenProductNotFound_ShouldThrowException()
+    public async Task Handle_WhenProductNotFound_ShouldReturnNull()
     {
         // Arrange.
         var productId = Guid.NewGuid();
@@ -29,15 +28,14 @@ public sealed class DeleteProductCommandTests
             .CreateSut();
 
         // Act.
-        Func<Task> action = () => sut.Handle(command, CancellationToken.None);
+        var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<NotFoundException>();
-        exception.Message.ShouldBe($"Entity \"product\" ({productId}) was not found.");
+        result.ShouldBeNull();
     }
 
     [Fact]
-    public async Task Handle_WhenProductFound_ShouldDeleteFeature()
+    public async Task Handle_WhenProductFound_ShouldDeleteProduct()
     {
         // Arrange.
         var productId = Guid.NewGuid();

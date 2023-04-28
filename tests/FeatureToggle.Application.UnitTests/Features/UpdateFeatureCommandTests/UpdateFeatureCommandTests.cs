@@ -1,5 +1,4 @@
-﻿using FeatureToggle.Application.Common.Exceptions;
-using FeatureToggle.Application.Features.Commands;
+﻿using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Domain.Entities;
 using NSubstitute;
 using Shouldly;
@@ -12,7 +11,7 @@ namespace FeatureToggle.Application.UnitTests.Features.UpdateFeatureCommandTests
 public sealed class UpdateFeatureCommandTests
 {
     [Fact]
-    public async Task Handle_WhenFeatureNotFound_ShouldThrowException()
+    public async Task Handle_WhenFeatureNotFound_ShouldReturnNull()
     {
         // Arrange.
         var featureId = Guid.NewGuid();
@@ -33,11 +32,10 @@ public sealed class UpdateFeatureCommandTests
             .CreateSut();
 
         // Act.
-        Func<Task> action = () => sut.Handle(command, CancellationToken.None);
+        var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<NotFoundException>();
-        exception.Message.ShouldBe($"Entity \"feature\" ({featureId}) was not found.");
+        result.ShouldBeNull();
     }
 
     [Fact]

@@ -12,7 +12,7 @@ namespace FeatureToggle.Application.UnitTests.Products.UpdateProductCommandTests
 public sealed class UpdateProductCommandTests
 {
     [Fact]
-    public async Task Handle_WhenProductNotFound_ShouldThrowException()
+    public async Task Handle_WhenProductNotFound_ShouldReturnNull()
     {
         // Arrange.
         var productId = Guid.NewGuid();
@@ -29,11 +29,10 @@ public sealed class UpdateProductCommandTests
             .CreateSut();
 
         // Act.
-        Func<Task> action = () => sut.Handle(command, CancellationToken.None);
+        var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<NotFoundException>();
-        exception.Message.ShouldBe($"Entity \"product\" ({productId}) was not found.");
+        result.ShouldBeNull();
     }
 
     [Fact]
