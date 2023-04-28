@@ -1,8 +1,8 @@
 ﻿using FeatureToggle.Application.Common.Exceptions;
 using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Domain.Entities;
+using FluentAssertions;
 using NSubstitute;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -32,7 +32,7 @@ public sealed class UpdateProductCommandTests
         var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        result.ShouldBeNull();
+        result.Should().BeNull();
     }
 
     [Fact]
@@ -56,8 +56,9 @@ public sealed class UpdateProductCommandTests
         Func<Task> action = () => sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<DuplicateFoundException>();
-        exception.Message.ShouldBe($"\"Product\" already exists with Name as (NewName).");
+        var exception = await action.Should()
+            .ThrowAsync<DuplicateFoundException>()
+            .WithMessage($"\"Product\" already exists with Name as (NewName).");
     }
 
     [Fact]

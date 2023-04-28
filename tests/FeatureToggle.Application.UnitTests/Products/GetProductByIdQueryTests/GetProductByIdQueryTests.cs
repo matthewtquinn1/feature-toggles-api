@@ -1,7 +1,7 @@
 ﻿using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Application.Products.Queries;
 using FeatureToggle.Domain.Entities;
-using Shouldly;
+using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -31,8 +31,8 @@ public sealed class GetProductByIdQueryTests
         var result = await sut.Handle(new GetProductByIdQuery(id), CancellationToken.None);
 
         // Assert.
-        result.ShouldNotBeNull();
-        result.Id.ShouldBe(id);
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(id);
     }
 
     [Fact]
@@ -56,6 +56,6 @@ public sealed class GetProductByIdQueryTests
         var result = await sut.Handle(new GetProductByIdQuery(id), CancellationToken.None);
 
         // Assert.
-        result.ShouldBeNull();
+        result.Should().BeNull();
     }
 }

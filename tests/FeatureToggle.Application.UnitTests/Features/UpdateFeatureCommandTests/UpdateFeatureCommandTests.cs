@@ -1,7 +1,7 @@
 ﻿using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Domain.Entities;
+using FluentAssertions;
 using NSubstitute;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -35,7 +35,7 @@ public sealed class UpdateFeatureCommandTests
         var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        result.ShouldBeNull();
+        result.Should().BeNull();
     }
 
     [Fact]

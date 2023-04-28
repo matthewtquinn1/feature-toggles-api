@@ -1,6 +1,6 @@
 ﻿using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Domain.Entities;
-using Shouldly;
+using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -27,8 +27,8 @@ public sealed class GetFeaturesQueryTests
         var result = await sut.Handle(new GetFeaturesQuery(), CancellationToken.None);
 
         // Assert.
-        result.Count().ShouldBe(2);
-        result.First().Id.ShouldBe(features.First().Id);
-        result.Last().Id.ShouldBe(features.Last().Id);
+        result.Should().HaveCount(2);
+        result.First().Id.Should().Be(features.First().Id);
+        result.Last().Id.Should().Be(features.Last().Id);
     }
 }

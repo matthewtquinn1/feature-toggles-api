@@ -1,6 +1,6 @@
 ﻿using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Domain.Entities;
-using Shouldly;
+using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -30,8 +30,8 @@ public sealed class GetFeatureByIdQueryTests
         var result = await sut.Handle(new GetFeatureByIdQuery(id), CancellationToken.None);
 
         // Assert.
-        result.ShouldNotBeNull();
-        result.Id.ShouldBe(id);
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(id);
     }
 
     [Fact]
@@ -55,6 +55,6 @@ public sealed class GetFeatureByIdQueryTests
         var result = await sut.Handle(new GetFeatureByIdQuery(id), CancellationToken.None);
 
         // Assert.
-        result.ShouldBeNull();
+        result.Should().BeNull();
     }
 }
