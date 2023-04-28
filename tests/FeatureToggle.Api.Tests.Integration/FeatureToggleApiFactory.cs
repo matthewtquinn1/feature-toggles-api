@@ -3,6 +3,7 @@ using FeatureToggle.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace FeatureToggle.Api.Tests.Integration;
 /// </summary>
 public sealed class FeatureToggleApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().WithEnvironment("Database", "FeatureToggle").Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -27,7 +28,7 @@ public sealed class FeatureToggleApiFactory : WebApplicationFactory<IApiMarker>,
         // Replace database for integration tests with one spun up in a docker container.
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(FeatureToggleContext));
+            services.RemoveAll(typeof(DbContextOptions<FeatureToggleContext>));
             services.RemoveAll(typeof(IApplicationDbContext));
 
             services.AddPersistence(_dbContainer.GetConnectionString());
