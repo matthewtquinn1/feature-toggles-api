@@ -53,19 +53,27 @@ public class FeaturesController : ControllerBase
 
     [HttpPatch("{id:Guid}")]
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
     {
         // TODO: Throw exception when id != command.Id.
 
-        return Ok(await _mediator.Send(command));
+        var updatedFeature = await _mediator.Send(command);
+
+        return updatedFeature == null
+            ? NotFound()
+            : Ok(updatedFeature);
     }
 
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        _ = await _mediator.Send(new DeleteFeatureCommand(id));
+        var unit = await _mediator.Send(new DeleteFeatureCommand(id));
 
-        return NoContent();
+        return unit == null
+            ? NotFound()
+            : NoContent();
     }
 }

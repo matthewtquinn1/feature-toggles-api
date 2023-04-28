@@ -2,14 +2,15 @@
 using FeatureToggle.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace FeatureToggle.Application.Features.Commands;
 
 public sealed record UpdateFeatureCommand(
     Guid Id,
-    string Description) : IRequest<FeatureDto>;
+    [Required][MaxLength(500)] string Description) : IRequest<FeatureDto?>;
 
-public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, FeatureDto>
+public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureCommand, FeatureDto?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -18,7 +19,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
         _context = context;
     }
 
-    public async Task<FeatureDto> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
+    public async Task<FeatureDto?> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
     {
         var feature = await _context.Features
             .Include(f => f.Product)
@@ -27,7 +28,7 @@ public sealed class UpdateFeatureCommandHandler : IRequestHandler<UpdateFeatureC
 
         if (feature == null)
         {
-            throw new NotFoundException(nameof(feature), request.Id);
+            return null;
         }
 
         feature.Description = request.Description;

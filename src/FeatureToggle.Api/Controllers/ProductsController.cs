@@ -52,19 +52,26 @@ public class ProductsController : ControllerBase
 
     [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, UpdateProductCommand command)
     {
         // TODO: Throw exception if id != command.Id.
 
-        return Ok(await _mediator.Send(command));
+        var updatedProduct = await _mediator.Send(command);
+
+        return updatedProduct == null
+            ? NotFound()
+            : Ok(updatedProduct);
     }
 
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        _ = await _mediator.Send(new DeleteProductCommand(id));
+        var unit = await _mediator.Send(new DeleteProductCommand(id));
 
-        return NoContent();
+        return unit == null
+            ? NotFound()
+            : NoContent();
     }
 }
