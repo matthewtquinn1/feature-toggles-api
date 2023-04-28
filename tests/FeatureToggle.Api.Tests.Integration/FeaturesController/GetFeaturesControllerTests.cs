@@ -1,19 +1,19 @@
-﻿using Bogus;
-using FeatureToggle.Application.Features;
+﻿using FeatureToggle.Application.Features;
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Application.Products;
-using FeatureToggle.Domain.Entities;
 using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
+using Bogus;
+using FeatureToggle.Domain.Entities;
 
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
 [ExcludeFromCodeCoverage]
-public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
+public sealed class GetFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
 {
     private readonly HttpClient _httpClient;
 
@@ -26,13 +26,13 @@ public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggle
             .RuleFor(x => x.Name, f => $"{f.Random.Word()}{f.Random.Word()}Enabled")
             .RuleFor(x => x.Description, f => f.Lorem.Sentences());
 
-    public GetByIdFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
+    public GetFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
     {
         _httpClient = apiFactory.CreateClient();
     }
 
     [Fact]
-    public async Task GetById_ReturnsFeature_WhenFeatureDoesExist()
+    public async Task Get_ReturnAllFeatures_WhenFeaturesExist()
     {
         // Arrange.
         var fakeProduct = _productGenerator.Generate();
@@ -42,30 +42,31 @@ public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggle
 
         var fakeFeature = _featureGenerator.Generate();
         var command = new CreateFeatureCommand(product!.Id, fakeFeature.Name, fakeFeature.Description);
-        var feature = await (await _httpClient.PostAsJsonAsync("api/features", command))
-            .Content.ReadFromJsonAsync<FeatureDto>();
+        _ = await _httpClient.PostAsJsonAsync("api/features", command);
 
         // Act.
-        var response = await _httpClient.GetAsync($"api/features/{feature!.Id}");
+        var response = await _httpClient.GetAsync($"api/features");
 
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var featureResponse = await response.Content.ReadFromJsonAsync<FeatureDto>();
-        featureResponse!.Name.Should().Be(command.Name);
-        featureResponse.Description.Should().Be(command.Description);
-        featureResponse.Product.Id.Should().Be(command.ProductId);
+        var featureResponse = await response.Content.ReadFromJsonAsync<List<FeatureDto>>();
+        featureResponse.Should().NotBeEmpty();
+        featureResponse![0].Name.Should().Be(command.Name);
+        featureResponse![0].Description.Should().Be(command.Description);
+
+        // Dispose.
+        await _httpClient.DeleteAsync($"api/features/{featureResponse[0].Id}");
     }
 
     [Fact]
-    public async Task GetById_ReturnsNotFound_WhenFeatureDoesNotExist()
+    public async Task Get_ReturnsEmptyResult_WhenNoFeaturesExist()
     {
-        // Arrange.
-        var id = Guid.NewGuid();
-
         // Act.
-        var response = await _httpClient.GetAsync($"api/features/{id}");
+        var response = await _httpClient.GetAsync($"api/features");
 
         // Assert.
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var featureResponse = await response.Content.ReadFromJsonAsync<List<FeatureDto>>();
+        featureResponse.Should().BeEmpty();
     }
 }

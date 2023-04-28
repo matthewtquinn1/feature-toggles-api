@@ -1,19 +1,19 @@
-﻿using Bogus;
-using FeatureToggle.Application.Features;
+﻿using FeatureToggle.Application.Features;
+using FluentAssertions;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
+using System.Net;
+using Xunit;
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Application.Products;
+using Bogus;
 using FeatureToggle.Domain.Entities;
-using FluentAssertions;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Net.Http.Json;
-using Xunit;
 
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
 [ExcludeFromCodeCoverage]
-public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
+public sealed class DeleteFeaturesControllerTests : IClassFixture<FeatureToggleApiFactory>
 {
     private readonly HttpClient _httpClient;
 
@@ -26,13 +26,13 @@ public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggle
             .RuleFor(x => x.Name, f => $"{f.Random.Word()}{f.Random.Word()}Enabled")
             .RuleFor(x => x.Description, f => f.Lorem.Sentences());
 
-    public GetByIdFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
+    public DeleteFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
     {
         _httpClient = apiFactory.CreateClient();
     }
 
     [Fact]
-    public async Task GetById_ReturnsFeature_WhenFeatureDoesExist()
+    public async Task Delete_ReturnsNoContent_WhenFeatureExists()
     {
         // Arrange.
         var fakeProduct = _productGenerator.Generate();
@@ -46,24 +46,20 @@ public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggle
             .Content.ReadFromJsonAsync<FeatureDto>();
 
         // Act.
-        var response = await _httpClient.GetAsync($"api/features/{feature!.Id}");
+        var response = await _httpClient.DeleteAsync($"api/features/{feature!.Id}");
 
         // Assert.
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var featureResponse = await response.Content.ReadFromJsonAsync<FeatureDto>();
-        featureResponse!.Name.Should().Be(command.Name);
-        featureResponse.Description.Should().Be(command.Description);
-        featureResponse.Product.Id.Should().Be(command.ProductId);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]
-    public async Task GetById_ReturnsNotFound_WhenFeatureDoesNotExist()
+    public async Task Delete_ReturnsNotFound_WhenFeatureDoesNotExists()
     {
         // Arrange.
         var id = Guid.NewGuid();
 
         // Act.
-        var response = await _httpClient.GetAsync($"api/features/{id}");
+        var response = await _httpClient.DeleteAsync($"api/features/{id}");
 
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

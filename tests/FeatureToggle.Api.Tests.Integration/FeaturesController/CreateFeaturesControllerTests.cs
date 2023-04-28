@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Application.Features;
 using Microsoft.AspNetCore.Mvc;
+using FeatureToggle.Application.Products;
 
 namespace FeatureToggle.Api.Tests.Integration.FeaturesController;
 
@@ -18,12 +19,12 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
     private readonly HttpClient _httpClient;
 
     private readonly Faker<Product> _productGenerator = new Faker<Product>()
-    .RuleFor(x => x.Name, f => f.Lorem.Word())
-    .RuleFor(x => x.Description, f => f.Lorem.Sentences());
+        .RuleFor(x => x.Name, f => $"{f.Lorem.Word()}{f.Lorem.Word()}")
+        .RuleFor(x => x.Description, f => f.Lorem.Sentences());
 
     private readonly Faker<Feature> _featureGenerator =
         new Faker<Feature>()
-            .RuleFor(x => x.Name, f => $"IntegrationTestData{f.Random.Word()}Enabled")
+            .RuleFor(x => x.Name, f => $"{f.Random.Word()}{f.Random.Word()}Enabled")
             .RuleFor(x => x.Description, f => f.Lorem.Sentences());
 
     public CreateFeaturesControllerTests(FeatureToggleApiFactory apiFactory)
@@ -37,11 +38,11 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
         // Arrange.
         var fakeProduct = _productGenerator.Generate();
         var productCommand = new CreateProductCommand(fakeProduct.Name, fakeProduct.Description);
-        var productId = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
-            .Content.ReadFromJsonAsync<Guid>();
+        var product = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
+            .Content.ReadFromJsonAsync<ProductDto>();
 
         var feature = _featureGenerator.Generate();
-        var command = new CreateFeatureCommand(productId, feature.Name, feature.Description);
+        var command = new CreateFeatureCommand(product!.Id, feature.Name, feature.Description);
 
         // Act.
         var response = await _httpClient.PostAsJsonAsync("api/features", command);
@@ -79,11 +80,11 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
         // Arrange.
         var fakeProduct = _productGenerator.Generate();
         var productCommand = new CreateProductCommand(fakeProduct.Name, fakeProduct.Description);
-        var productId = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
-            .Content.ReadFromJsonAsync<Guid>();
+        var product = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
+            .Content.ReadFromJsonAsync<ProductDto>();
 
         var feature = _featureGenerator.Clone().RuleFor(x => x.Name, name).Generate();
-        var command = new CreateFeatureCommand(productId, feature.Name, feature.Description);
+        var command = new CreateFeatureCommand(product!.Id, feature.Name, feature.Description);
 
         // Act.
         var response = await _httpClient.PostAsJsonAsync("api/features", command);
@@ -104,11 +105,11 @@ public sealed class CreateFeaturesControllerTests : IClassFixture<FeatureToggleA
         // Arrange.
         var fakeProduct = _productGenerator.Generate();
         var productCommand = new CreateProductCommand(fakeProduct.Name, fakeProduct.Description);
-        var productId = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
-            .Content.ReadFromJsonAsync<Guid>();
+        var product = await (await _httpClient.PostAsJsonAsync("api/products", productCommand))
+            .Content.ReadFromJsonAsync<ProductDto>();
 
         var feature = _featureGenerator.Clone().RuleFor(x => x.Description, description).Generate();
-        var command = new CreateFeatureCommand(productId, feature.Name, feature.Description);
+        var command = new CreateFeatureCommand(product!.Id, feature.Name, feature.Description);
 
         // Act.
         var response = await _httpClient.PostAsJsonAsync("api/features", command);
