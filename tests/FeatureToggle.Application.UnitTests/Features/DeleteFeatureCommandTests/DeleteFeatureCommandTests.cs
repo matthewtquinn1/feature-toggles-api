@@ -1,8 +1,7 @@
-﻿using FeatureToggle.Application.Common.Exceptions;
-using FeatureToggle.Application.Features.Commands;
+﻿using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Domain.Entities;
+using FluentAssertions;
 using NSubstitute;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -12,7 +11,7 @@ namespace FeatureToggle.Application.UnitTests.Features.DeleteFeatureCommandTests
 public sealed class DeleteFeatureCommandTests
 {
     [Fact]
-    public async Task Handle_WhenFeatureNotFound_ShouldThrowException()
+    public async Task Handle_WhenFeatureNotFound_ShouldReturnNull()
     {
         // Arrange.
         var featureId = Guid.NewGuid();
@@ -29,11 +28,10 @@ public sealed class DeleteFeatureCommandTests
             .CreateSut();
 
         // Act.
-        Func<Task> action = () => sut.Handle(command, CancellationToken.None);
+        var result = await sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<NotFoundException>();
-        exception.Message.ShouldBe($"Entity \"feature\" ({featureId}) was not found.");
+        result.Should().BeNull();
     }
 
     [Fact]

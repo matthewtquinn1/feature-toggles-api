@@ -1,6 +1,6 @@
 ﻿using FeatureToggle.Application.Products.Queries;
 using FeatureToggle.Domain.Entities;
-using Shouldly;
+using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -27,8 +27,8 @@ public sealed class GetProductsQueryTests
         var result = await sut.Handle(new GetProductsQuery(), CancellationToken.None);
 
         // Assert.
-        result.Count().ShouldBe(2);
-        result.First().Id.ShouldBe(products.First().Id);
-        result.Last().Id.ShouldBe(products.Last().Id);
+        result.Should().HaveCount(2);
+        result.First().Id.Should().Be(products.First().Id);
+        result.Last().Id.Should().Be(products.Last().Id);
     }
 }

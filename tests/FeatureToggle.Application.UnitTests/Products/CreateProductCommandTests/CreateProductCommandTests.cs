@@ -2,8 +2,8 @@
 using FeatureToggle.Application.Products.Commands;
 using FeatureToggle.Application.UnitTests.Products.CreateProductCommandTests;
 using FeatureToggle.Domain.Entities;
+using FluentAssertions;
 using NSubstitute;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -33,8 +33,9 @@ public sealed class CreateProductCommandTests
         Func<Task> action = () => sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync(typeof(DuplicateFoundException));
-        exception.Message.ShouldBe($"\"Product\" already exists with Name as (DuplicateTestName).");
+        await action.Should()
+            .ThrowAsync<DuplicateFoundException>()
+            .WithMessage($"\"Product\" already exists with Name as (DuplicateTestName).");
     }
 
     [Fact]

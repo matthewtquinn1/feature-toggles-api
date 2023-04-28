@@ -3,12 +3,16 @@ using FeatureToggle.Application.Common.Interfaces;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace FeatureToggle.Application.Products.Commands;
 
-public sealed record UpdateProductCommand(Guid Id, string Name, string Description) : IRequest<ProductDto>;
+public sealed record UpdateProductCommand(
+    Guid Id, 
+    [Required][MaxLength(250)] string Name,
+    [Required][MaxLength(500)] string Description) : IRequest<ProductDto?>;
 
-public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto>
+public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto?>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,13 +21,13 @@ public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductC
         _context = context;
     }
 
-    public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ProductDto?> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product == null)
         {
-            throw new NotFoundException(nameof(product), request.Id);
+            return null;
         }
 
         var existingProduct = await _context.Products

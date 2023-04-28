@@ -2,8 +2,8 @@
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Domain.Entities;
 using FeatureToggle.Domain.Enums;
+using FluentAssertions;
 using NSubstitute;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -40,8 +40,9 @@ public sealed class CreateFeatureCommandTests
         Func<Task> action = () => sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync<NotFoundException>();
-        exception.Message.ShouldBe($"Entity \"product\" ({productId}) was not found.");
+        await action.Should()
+            .ThrowAsync<NotFoundException>()
+            .WithMessage($"Entity \"product\" ({productId}) was not found.");
     }
 
     [Fact]
@@ -68,8 +69,9 @@ public sealed class CreateFeatureCommandTests
         Func<Task> action = () => sut.Handle(command, CancellationToken.None);
 
         // Assert.
-        var exception = await action.ShouldThrowAsync(typeof(DuplicateFoundException));
-        exception.Message.ShouldBe($"\"Feature\" already exists with Name as (DuplicateTestName).");
+        await action.Should()
+            .ThrowAsync<DuplicateFoundException>()
+            .WithMessage($"\"Feature\" already exists with Name as (DuplicateTestName).");
     }
 
     [Fact]

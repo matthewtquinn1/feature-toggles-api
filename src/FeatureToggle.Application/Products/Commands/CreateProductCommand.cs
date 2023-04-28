@@ -3,12 +3,15 @@ using FeatureToggle.Application.Common.Interfaces;
 using FeatureToggle.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace FeatureToggle.Application.Products.Commands;
 
-public sealed record CreateProductCommand(string Name, string Description) : IRequest<Guid>;
+public sealed record CreateProductCommand(
+    [Required][MaxLength(250)] string Name,
+    [Required][MaxLength(500)] string Description) : IRequest<ProductDto>;
 
-public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
+public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,7 +20,7 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var existingProduct = await _context.Products
             .AsNoTracking()
@@ -33,6 +36,6 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
         _ = await _context.Products.AddAsync(product, cancellationToken);
         _ = await _context.SaveChangesAsync(cancellationToken);
 
-        return product.Id;
+        return product.MapToDto();
     }
 }

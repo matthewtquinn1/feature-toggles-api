@@ -1,3 +1,4 @@
+using FeatureToggle.Application.Features;
 using FeatureToggle.Application.Features.Commands;
 using FeatureToggle.Application.Features.Queries;
 using FeatureToggle.Domain.Entities;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FeatureToggle.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/features")]
 public class FeaturesController : ControllerBase
 {
     private readonly ILogger<FeaturesController> _logger;
@@ -30,6 +31,7 @@ public class FeaturesController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var feature = await _mediator.Send(new GetFeatureByIdQuery(id));
@@ -40,27 +42,38 @@ public class FeaturesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FeatureDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(CreateFeatureCommand command)
     {
-        return Ok(await _mediator.Send(command));
+        var feature = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetById), new { feature.Id }, feature);
     }
 
     [HttpPatch("{id:Guid}")]
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
     {
         // TODO: Throw exception when id != command.Id.
 
-        return Ok(await _mediator.Send(command));
+        var updatedFeature = await _mediator.Send(command);
+
+        return updatedFeature == null
+            ? NotFound()
+            : Ok(updatedFeature);
     }
 
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        _ = await _mediator.Send(new DeleteFeatureCommand(id));
+        var unit = await _mediator.Send(new DeleteFeatureCommand(id));
 
-        return NoContent();
+        return unit == null
+            ? NotFound()
+            : NoContent();
     }
 }
