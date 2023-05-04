@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FeatureToggle.Application\FeatureToggle.Application.csproj" />
-    <ProjectReference Include="..\FeatureToggle.Domain\FeatureToggle.Domain.csproj" />
     <ProjectReference Include="..\FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj" />
   </ItemGroup>
 
