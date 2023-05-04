@@ -18,7 +18,7 @@ namespace FeatureToggle.Api.Tests.Integration;
 /// </summary>
 public sealed class FeatureToggleApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().WithEnvironment("Database", "FeatureToggle").Build();
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
