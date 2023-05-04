@@ -13,7 +13,7 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddPersistence(builder.Configuration.GetConnectionString("FeatureToggle"));
+builder.Services.AddPersistence(builder.Configuration.GetConnectionString("FeatureToggle")!);
 builder.Services.AddScoped<IApplicationDbContext>(serviceProvider => serviceProvider.GetRequiredService<FeatureToggleContext>());
 
 builder.Services.AddApplicationServices();
