@@ -1,5 +1,5 @@
 ﻿using FeatureToggle.Application.FeatureStates;
-using FeatureToggle.Domain.Entities;
+using FeatureToggle.Application.Products;
 
 namespace FeatureToggle.Application.Features;
 
@@ -7,5 +7,5 @@ public sealed record FeatureDto(
     Guid Id,
     string Name,
     string Description,
-    Product Product,
+    ProductDto Product,
     IEnumerable<FeatureStateDto> FeatureStates);
