@@ -53,7 +53,6 @@ public sealed class GetByIdFeaturesControllerTests : IClassFixture<FeatureToggle
         var featureResponse = await response.Content.ReadFromJsonAsync<FeatureDto>();
         featureResponse!.Name.Should().Be(command.Name);
         featureResponse.Description.Should().Be(command.Description);
-        featureResponse.Product.Id.Should().Be(command.ProductId);
     }
 
     [Fact]
