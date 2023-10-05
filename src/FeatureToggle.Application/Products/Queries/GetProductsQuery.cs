@@ -22,11 +22,11 @@ public sealed class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, 
             throw new ArgumentNullException(nameof(request), "Cannot find feature when request is null");
         }
 
-        return (await _context.Products
+        return await _context.Products
+            .AsNoTracking()
             .Include(p => p.Features)
                 .ThenInclude(f => f.FeatureStates)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken))
-            .Select(p => p.MapToDto());
+            .Select(x => x.MapToDto())
+            .ToListAsync(cancellationToken);
     }
 }
