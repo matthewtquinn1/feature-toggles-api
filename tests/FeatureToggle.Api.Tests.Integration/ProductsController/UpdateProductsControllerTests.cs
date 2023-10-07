@@ -107,4 +107,17 @@ public sealed class UpdateProductsControllerTests : IClassFixture<FeatureToggleA
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task Update_ReturnsBadRequest_WhenIdsDoNotMatch()
+    {
+        // Arrange.
+        var updateProductCommand = new UpdateProductCommand(Guid.NewGuid(), "New name", "New description");
+
+        // Act.
+        var response = await _httpClient.PutAsJsonAsync($"api/products/{Guid.NewGuid()}", updateProductCommand);
+
+        // Assert.
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 }

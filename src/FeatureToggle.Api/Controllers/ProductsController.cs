@@ -55,7 +55,10 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, UpdateProductCommand command)
     {
-        // TODO: Throw exception if id != command.Id.
+        if (id != command.Id)
+        {
+            return BadRequest("Cannot update product; provided ID in URL and command do not match.");
+        }
 
         var updatedProduct = await _mediator.Send(command);
 

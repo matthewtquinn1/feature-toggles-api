@@ -85,4 +85,17 @@ public sealed class ToggleActiveStateFeatureStatesControllerTests : IClassFixtur
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task ToggleActiveStatus_ReturnsBadRequest_WhenIdsDoNotMatch()
+    {
+        // Arrange.
+        var updateFeatureStateCommand = new UpdateFeatureStateCommand(Guid.NewGuid(), true);
+
+        // Act.
+        var response = await _httpClient.PatchAsync($"api/feature-states/{Guid.NewGuid()}", JsonContent.Create(updateFeatureStateCommand));
+
+        // Assert.
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 }

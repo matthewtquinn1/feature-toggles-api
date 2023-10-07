@@ -98,4 +98,17 @@ public sealed class UpdateFeaturesControllerTests : IClassFixture<FeatureToggleA
         // Assert.
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task Update_ReturnsBadRequest_WhenIdsDoNotMatch()
+    {
+        // Arrange.
+        var updateFeatureCommand = new UpdateFeatureCommand(Guid.NewGuid(), "New description");
+
+        // Act.
+        var response = await _httpClient.PatchAsync($"api/features/{Guid.NewGuid()}", JsonContent.Create(updateFeatureCommand));
+
+        // Assert.
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 }

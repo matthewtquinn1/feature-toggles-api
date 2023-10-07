@@ -24,7 +24,10 @@ public class FeatureStatesController : ControllerBase
     [ProducesResponseType(typeof(Feature), StatusCodes.Status200OK)]
     public async Task<IActionResult> ToggleActiveState(Guid id, UpdateFeatureStateCommand command)
     {
-        // TODO: Throw exception when id != command.Id.
+        if (id != command.Id)
+        {
+            return BadRequest("Cannot update feature state; provided ID in URL and command do not match.");
+        }
 
         var featureState = await _mediator.Send(command);
 

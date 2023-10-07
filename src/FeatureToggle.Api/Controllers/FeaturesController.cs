@@ -56,7 +56,10 @@ public class FeaturesController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, UpdateFeatureCommand command)
     {
-        // TODO: Throw exception when id != command.Id.
+        if (id != command.Id)
+        {
+            return BadRequest("Cannot update feature; provided ID in URL and command do not match.");
+        }
 
         var updatedFeature = await _mediator.Send(command);
 
