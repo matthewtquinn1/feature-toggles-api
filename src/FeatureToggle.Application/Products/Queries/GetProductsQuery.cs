@@ -17,11 +17,6 @@ public sealed class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, 
 
     public async Task<IEnumerable<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Cannot find feature when request is null");
-        }
-
         return await _context.Products
             .AsNoTracking()
             .Include(p => p.Features)
