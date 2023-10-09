@@ -22,17 +22,11 @@ public sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQ
             throw new ArgumentNullException(nameof(request), "Cannot find product when request is null");
         }
 
-        var product = await _context.Products
+        return await _context.Products
+            .AsNoTracking()
             .Include(p => p.Features)
                 .ThenInclude(f => f.FeatureStates)
-            .AsNoTracking()
+            .Select(p => p.MapToDto())
             .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
-
-        if (product == null)
-        {
-            return null;
-        }
-
-        return product.MapToDto();
     }
 }

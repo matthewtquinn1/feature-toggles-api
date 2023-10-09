@@ -10,6 +10,7 @@ internal static class FeatureMappings
     {
         return new FeatureDto(
             feature.Id,
+            feature.Product.Id,
             feature.Name,
             feature.Description,
             feature.FeatureStates.Select(featureState => featureState.MapToDto()));

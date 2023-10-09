@@ -17,17 +17,11 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
 
     public async Task<FeatureDto?> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
     {
-        var feature = await _context.Features
+        return await _context.Features
+            .AsNoTracking()
             .Include(f => f.Product)
             .Include(f => f.FeatureStates)
-            .AsNoTracking()
-            .SingleOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
-
-        if (feature == null)
-        {
-            return null;
-        }
-
-        return feature.MapToDto();
+            .Select(f => f.MapToDto())
+            .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
     }
 }

@@ -17,11 +17,11 @@ public sealed class GetFeaturesQueryHandler : IRequestHandler<GetFeaturesQuery, 
 
 	public async Task<IEnumerable<FeatureDto>> Handle(GetFeaturesQuery request, CancellationToken cancellationToken)
 	{
-        return (await _context.Features
+        return await _context.Features
+            .AsNoTracking()
             .Include(f => f.Product)
             .Include(f => f.FeatureStates)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken))
-            .Select(feature => feature.MapToDto());
+            .Select(feature => feature.MapToDto())
+            .ToListAsync(cancellationToken);
     }
 }
