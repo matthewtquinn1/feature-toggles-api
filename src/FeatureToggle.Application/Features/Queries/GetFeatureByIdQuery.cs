@@ -17,11 +17,11 @@ public sealed class GetFeatureByIdQueryHandler : IRequestHandler<GetFeatureByIdQ
 
     public async Task<FeatureDto?> Handle(GetFeatureByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Features
+        return (await _context.Features
             .AsNoTracking()
             .Include(f => f.Product)
             .Include(f => f.FeatureStates)
-            .Select(f => f.MapToDto())
-            .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(f => f.Id == request.Id, cancellationToken))
+            ?.MapToDto(); // TODO: investigate why EF Core cannot convert this Linq to SQL.;
     }
 }
