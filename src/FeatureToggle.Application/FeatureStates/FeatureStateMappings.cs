@@ -2,9 +2,9 @@
 
 namespace FeatureToggle.Application.FeatureStates;
 
-internal static class FeatureStateMappings
+public static class FeatureStateMappings
 {
-    internal static FeatureStateDto MapToDto(this FeatureState featureState)
+    public static FeatureStateDto MapToDto(this FeatureState featureState)
     {
         return new FeatureStateDto(
             featureState.Id,

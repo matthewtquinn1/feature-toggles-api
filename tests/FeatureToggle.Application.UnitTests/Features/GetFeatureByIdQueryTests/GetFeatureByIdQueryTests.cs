@@ -17,9 +17,9 @@ public sealed class GetFeatureByIdQueryTests
 
         var features = new List<Feature>
         {
-            new() {  Id = Guid.NewGuid() },
-            new() {  Id = id },
-            new() {  Id = Guid.NewGuid() },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
+            new() {  Id = id, Product = new Product { Id = Guid.NewGuid() }},
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
         };
 
         var sut = new GetFeatureByIdQueryFixture()
@@ -42,9 +42,9 @@ public sealed class GetFeatureByIdQueryTests
 
         var features = new List<Feature>
         {
-            new() {  Id = Guid.NewGuid() },
-            new() {  Id = Guid.NewGuid() },
-            new() {  Id = Guid.NewGuid() },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
         };
 
         var sut = new GetFeatureByIdQueryFixture()

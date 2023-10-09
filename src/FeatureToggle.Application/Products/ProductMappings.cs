@@ -3,9 +3,9 @@ using FeatureToggle.Domain.Entities;
 
 namespace FeatureToggle.Application.Products;
 
-internal static class ProductMappings
+public static class ProductMappings
 {
-    internal static ProductDto MapToDto(this Product product)
+    public static ProductDto MapToDto(this Product product)
     {
         return new ProductDto(
             product.Id,

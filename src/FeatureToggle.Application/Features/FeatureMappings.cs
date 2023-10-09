@@ -4,10 +4,17 @@ using FeatureToggle.Domain.Entities;
 
 namespace FeatureToggle.Application.Features;
 
-internal static class FeatureMappings
+public static class FeatureMappings
 {
-    internal static FeatureDto MapToDto(this Feature feature)
+    public static FeatureDto MapToDto(this Feature feature)
     {
+        if (feature?.Product is null)
+        {
+            throw new ArgumentNullException(
+                nameof(feature.Product), 
+                "Cannot convert feature to DTO when product is missing");
+        }
+
         return new FeatureDto(
             feature.Id,
             feature.Product.Id,

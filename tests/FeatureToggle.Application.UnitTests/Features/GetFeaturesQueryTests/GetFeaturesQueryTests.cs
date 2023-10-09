@@ -15,8 +15,8 @@ public sealed class GetFeaturesQueryTests
         // Arrange.
         var features = new List<Feature>
         {
-            new() {  Id = Guid.NewGuid() },
-            new() {  Id = Guid.NewGuid() },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
+            new() {  Id = Guid.NewGuid(), Product = new Product { Id = Guid.NewGuid() } },
         };
 
         var sut = new GetFeaturesQueryFixture()
