@@ -1,13 +1,13 @@
 ﻿using FeatureToggle.Application.Common.Exceptions;
 using FeatureToggle.Application.Products.Commands;
-using FeatureToggle.Application.UnitTests.Products.CreateProductCommandTests;
+using FeatureToggle.Application.Tests.Unit.Products.CreateProductCommandTests;
 using FeatureToggle.Domain.Entities;
 using FluentAssertions;
 using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Products.CreateProductsCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Products.CreateProductsCommandTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateProductCommandTests

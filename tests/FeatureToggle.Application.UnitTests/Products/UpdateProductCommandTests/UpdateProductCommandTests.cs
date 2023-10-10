@@ -6,7 +6,7 @@ using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Products.UpdateProductCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Products.UpdateProductCommandTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UpdateProductCommandTests

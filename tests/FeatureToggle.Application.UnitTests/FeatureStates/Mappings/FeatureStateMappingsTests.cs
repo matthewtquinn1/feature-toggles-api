@@ -4,7 +4,7 @@ using FeatureToggle.Domain.Enums;
 using FluentAssertions;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.FeatureStates.Mappings;
+namespace FeatureToggle.Application.Tests.Unit.FeatureStates.Mappings;
 
 public sealed class FeatureStateMappingsTests
 {

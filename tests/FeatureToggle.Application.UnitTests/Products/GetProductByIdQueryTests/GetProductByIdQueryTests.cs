@@ -5,7 +5,7 @@ using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Products.GetProductByIdQueryTests;
+namespace FeatureToggle.Application.Tests.Unit.Products.GetProductByIdQueryTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetProductByIdQueryTests

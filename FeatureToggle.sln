@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Infrastructur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DA883A1E-76AD-4799-86F9-2FD6DE5BF174}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Application.UnitTests", "tests\FeatureToggle.Application.UnitTests\FeatureToggle.Application.UnitTests.csproj", "{27A0B1CB-C4D3-4B47-9BA0-C8903A2E40B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Application.Tests.Unit", "tests\FeatureToggle.Application.UnitTests\FeatureToggle.Application.Tests.Unit.csproj", "{27A0B1CB-C4D3-4B47-9BA0-C8903A2E40B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureToggle.Api.Tests.Integration", "tests\FeatureToggle.Api.Tests.Integration\FeatureToggle.Api.Tests.Integration.csproj", "{7AE1C1DC-3378-4F4C-A7AE-B95C7AC29B86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle.Api.Tests.Integration", "tests\FeatureToggle.Api.Tests.Integration\FeatureToggle.Api.Tests.Integration.csproj", "{7AE1C1DC-3378-4F4C-A7AE-B95C7AC29B86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

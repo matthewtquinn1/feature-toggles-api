@@ -5,7 +5,7 @@ using MockQueryable.NSubstitute;
 using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FeatureToggle.Application.UnitTests.Products.GetProductByIdQueryTests;
+namespace FeatureToggle.Application.Tests.Unit.Products.GetProductByIdQueryTests;
 
 [ExcludeFromCodeCoverage]
 internal sealed class GetProductByIdQueryFixture

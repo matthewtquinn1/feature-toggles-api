@@ -5,7 +5,7 @@ using MockQueryable.NSubstitute;
 using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FeatureToggle.Application.UnitTests.Products.UpdateProductCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Products.UpdateProductCommandTests;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UpdateProductCommandFixture

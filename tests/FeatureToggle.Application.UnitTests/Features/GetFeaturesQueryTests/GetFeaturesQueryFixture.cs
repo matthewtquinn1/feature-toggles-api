@@ -5,7 +5,7 @@ using MockQueryable.NSubstitute;
 using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FeatureToggle.Application.UnitTests.Features.GetFeaturesQueryTests;
+namespace FeatureToggle.Application.Tests.Unit.Features.GetFeaturesQueryTests;
 
 [ExcludeFromCodeCoverage]
 internal sealed class GetFeaturesQueryFixture

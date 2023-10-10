@@ -7,7 +7,7 @@ using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Features.CreateFeatureCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Features.CreateFeatureCommandTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateFeatureCommandTests

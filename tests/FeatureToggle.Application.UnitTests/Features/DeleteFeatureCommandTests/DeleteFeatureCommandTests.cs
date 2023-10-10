@@ -5,7 +5,7 @@ using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Features.DeleteFeatureCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Features.DeleteFeatureCommandTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DeleteFeatureCommandTests

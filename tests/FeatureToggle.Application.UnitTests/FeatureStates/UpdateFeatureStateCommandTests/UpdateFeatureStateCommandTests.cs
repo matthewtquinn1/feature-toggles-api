@@ -5,7 +5,7 @@ using NSubstitute;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.FeatureStates.UpdateFeatureStateCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.FeatureStates.UpdateFeatureStateCommandTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UpdateFeatureStateCommandTests

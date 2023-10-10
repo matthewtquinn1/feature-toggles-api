@@ -3,7 +3,7 @@ using FeatureToggle.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Products.Mappings;
+namespace FeatureToggle.Application.Tests.Unit.Products.Mappings;
 
 public sealed class ProductMappingsTests
 {

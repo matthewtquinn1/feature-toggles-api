@@ -4,7 +4,7 @@ using FeatureToggle.Domain.Entities;
 using MockQueryable.NSubstitute;
 using NSubstitute;
 
-namespace FeatureToggle.Application.UnitTests.Features.DeleteFeatureCommandTests;
+namespace FeatureToggle.Application.Tests.Unit.Features.DeleteFeatureCommandTests;
 
 internal sealed class DeleteFeatureCommandFixture
 {

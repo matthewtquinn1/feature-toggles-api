@@ -4,7 +4,7 @@ using FluentAssertions;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace FeatureToggle.Application.UnitTests.Features.GetFeatureByIdQueryTests;
+namespace FeatureToggle.Application.Tests.Unit.Features.GetFeatureByIdQueryTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetFeatureByIdQueryTests
