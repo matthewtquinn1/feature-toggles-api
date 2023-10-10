@@ -1,0 +1,34 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Restore NuGet packages
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
+    vstsFeed: 'fe0ad43a-ef8d-40a9-ad5b-b0bc74e465b9'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '**/*Tests.Unit.csproj'
+    testRunTitle: 'Unit tests'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '**/*Tests.Unit.csproj'
+    testRunTitle: 'Integration tests'
