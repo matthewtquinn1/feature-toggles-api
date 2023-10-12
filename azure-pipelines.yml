@@ -22,13 +22,15 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: Unit Tests
   inputs:
     command: 'test'
     projects: '**/*Tests.Unit.csproj'
     testRunTitle: 'Unit tests'
 
 - task: DotNetCoreCLI@2
+  displayName: Integration Tests
   inputs:
     command: 'test'
-    projects: '**/*Tests.Unit.csproj'
+    projects: '**/*Tests.Integration.csproj'
     testRunTitle: 'Integration tests'
