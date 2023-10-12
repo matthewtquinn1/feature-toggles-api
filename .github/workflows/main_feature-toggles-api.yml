@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +27,13 @@ jobs:
 
       - name: dotnet unit tests
         run: dotnet test tests/FeatureToggle.Application.Tests.Unit/FeatureToggle.Application.Tests.Unit.csproj
+
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --platform linux/amd64 --tag issue-metrics:"$(date +%s)"
+
+      - name: dotnet integration tests
+        run: dotnet test tests/FeatureToggle.Application.Tests.Integration/FeatureToggle.Application.Tests.Integration.csproj
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
